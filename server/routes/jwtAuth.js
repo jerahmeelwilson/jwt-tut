@@ -8,7 +8,7 @@ const authorization = require("../middleware/authorization");
 router.post("/register", validInfo, async (req, res) => {
   try {
     //1. destructure req.body (name, email, password)
-    const { name, email, password } = req.body;
+    const { username, email, password } = req.body;
     //2. check if user exist (if user exist then throw error)
     const user = await sequelize.query(
       `select * from users where user_email = '${email}'`
@@ -24,11 +24,11 @@ router.post("/register", validInfo, async (req, res) => {
     await sequelize.query(
       `INSERT INTO users (user_name, user_email, user_password) 
       VALUES (
-          '${name}',
+          '${username}',
           '${email}',
           '${passwordHash}')`
     );
-    const newUser = await sequelize.query(`SELECT user_id, user_name, user_email FROM users WHERE user_name = '${name}';`
+    const newUser = await sequelize.query(`SELECT user_id, user_name, user_email FROM users WHERE user_email = '${email}';`
     );
     //5. generating our jwt token
   

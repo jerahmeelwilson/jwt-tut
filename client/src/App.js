@@ -8,6 +8,8 @@ import Dashboard from './components/Dashboard';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const loginUser = () => setIsLoggedIn(!isLoggedIn);
+
   
 
   return (
@@ -19,7 +21,7 @@ function App() {
           Login
       </NavLink>
         <Routes>
-          <Route path ="/" element ={<Login />}/>
+          <Route path ="/" element={isLoggedIn ? <Dashboard /> : <Login logFunction={loginUser}/>}/>
           <Route path ="/register" element={<Register />}/>
         </Routes>
     </div>
