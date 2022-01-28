@@ -1,9 +1,11 @@
 import React from "react";
 import { useFormik } from "formik";
 import { useNavigate } from 'react-router-dom'
-
-function Register() {
-  const navigate = useNavigate()
+import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
+import 'react-toastify/dist/ReactToastify.css';
+function Register({setLogin}) {
+  const navigate = useNavigate();
   const initialValues = {
     username: "",
     email: "",
@@ -11,21 +13,41 @@ function Register() {
     confirmPassword: "",
   };
   const onSubmit = async (values) => {
-      console.log(values);
-    try {
-      const res = await fetch("http://localhost:4001/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      
-      const parseRes = await res.json();
 
-      console.log(parseRes);
-      navigate('/');
-    } catch (err) {
-      console.error(err.message);
-    }
+    // try {
+    //   const res = await fetch("http://localhost:4001/auth/register", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(values),
+    //   });
+      
+    //   const parseRes = await res.json();
+    //   console.log(parseRes)
+    //   if(parseRes.token){
+    //     localStorage.setItem("token", parseRes.token);
+    //     setLogin(true);
+    //     toast.success("Register Successfully");
+    //     navigate('/'); 
+    //   } else{
+    //     toast.error(parseRes);
+    //   }
+    // } catch (err) {
+    //   console.error(err.message);
+    // }
+    axios.post('http://localhost:4001/auth/register', values)
+    .then((res) => {
+        if(res.data.token){
+            localStorage.setItem("token", res.data.token);
+            setLogin(true);
+            toast.success("Registration Successfull");
+            navigate('/'); 
+          } else{
+            toast.error(res.data);
+          }
+    }).catch((err) => {
+      toast.error(err.response.data);
+    })
+
   };
   const validate = (values) => {
     const errors = {};

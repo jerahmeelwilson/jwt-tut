@@ -6,23 +6,32 @@ import { Route, Routes, NavLink } from 'react-router-dom';
 import {useState, useEffect} from 'react'
 import Dashboard from './components/Dashboard';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const loginUser = () => setIsLoggedIn(!isLoggedIn);
-
   
+  useEffect(() => {
+    if(localStorage.getItem('token')) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
 
   return (
     <div className="App">
+       <NavLink to="/">
+          Home
+      </NavLink>
       <NavLink to="/register">
           Register
       </NavLink>
-      <NavLink to="/">
-          Login
-      </NavLink>
+      <ToastContainer />
         <Routes>
-          <Route path ="/" element={isLoggedIn ? <Dashboard /> : <Login logFunction={loginUser}/>}/>
-          <Route path ="/register" element={<Register />}/>
+          <Route path ="/" element={isLoggedIn ? <Dashboard setLogin= {setIsLoggedIn}/> : <Login setLogin={setIsLoggedIn}/>}/>
+          <Route path ="/register" element={<Register setLogin= {setIsLoggedIn}/>}/>
         </Routes>
     </div>
   );
